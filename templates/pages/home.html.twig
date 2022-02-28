@@ -1,29 +1,29 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <h1>Password Generator</h1>
-    <form action="">
+    <form action="{{ path('app_generate_password') }}">
         <div>
             <label for="length">Length</label>
-            <select name="" id="length">
-                {% for i in 8..60 %}
-                    <option value="{{ i }}">{{ i }}</option>
+            <select name="length" id="length">
+                {% for i in range(8,60) %}
+                    <option value="{{ i }}" {%  if i == 12 %}selected{% endif%} >{{ i }}</option>
                 {% endfor %}
             </select>
         </div>
 
         <div>
             <label for="uppercase_letters">Uppercase Letters</label>
-            <input type="checkbox" >
+            <input name="uppercase_letters" type="checkbox" id="uppercase_letters">
         </div>
 
         <div>
-            <label for="numbers">Numbers</label>
-            <input type="checkbox" id="numbers">
+            <label for="digits">Numbers</label>
+            <input name="digits" type="checkbox" id="digits">
         </div>
 
         <div>
             <label for="special_characters">Special Characters</label>
-            <input type="checkbox" id="special_characters">
+            <input name="special_characters" type="checkbox" id="special_characters">
         </div>
 
         <div>

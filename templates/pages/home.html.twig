@@ -1,4 +1,40 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <h1>Password Generator</h1>
+    <form action="">
+        <div>
+            <label for="length">Length</label>
+            <select name="" id="length">
+                {% for i in 8..60 %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="uppercase_letters">Uppercase Letters</label>
+            <input type="checkbox" >
+        </div>
+
+        <div>
+            <label for="numbers">Numbers</label>
+            <input type="checkbox" id="numbers">
+        </div>
+
+        <div>
+            <label for="special_characters">Special Characters</label>
+            <input type="checkbox" id="special_characters">
+        </div>
+
+        <div>
+            <button type="submit">Generate Password</button>
+        </div>
+    </form>
+
+    <footer>
+        <p>
+            Built with &hearts; by
+            <a href="https://github.com/Nirvaan1">Nirvaan</a>.
+        </p>
+    </footer>
 {% endblock %}

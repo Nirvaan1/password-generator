@@ -30,36 +30,34 @@ class PagesController extends AbstractController
 
         $finalAlphabet = $lowercaseLettersAlphabet;
 
-        $password = '';
+        $password = [];
 
         // add a lowercase letter
-        $password .=  $this->pickRandomElement($lowercaseLettersAlphabet);
+        $password[] =  $this->pickRandomElement($lowercaseLettersAlphabet);
 
         if ($uppercaseLetters){
             $finalAlphabet = array_merge($finalAlphabet ,$uppercaseLettersAlphabet);
 
             // add a capital letter
-            $password .=  $this->pickRandomElement($uppercaseLettersAlphabet);
+            $password[] =  $this->pickRandomElement($uppercaseLettersAlphabet);
         }
         if ($digits){
             $finalAlphabet = array_merge($finalAlphabet ,$digitsAlphabet);
 
             // add a number
-            $password .=  $this->pickRandomElement($digitsAlphabet);
+            $password[] =  $this->pickRandomElement($digitsAlphabet);
         }
         if ($specialCharacters){
             $finalAlphabet = array_merge($finalAlphabet ,$specialCharactersAlphabet);
 
            // add a special character
-            $password .=  $this->pickRandomElement($specialCharactersAlphabet);
+            $password[] =  $this->pickRandomElement($specialCharactersAlphabet);
         }
 
-        $lengthRemaining = $length - mb_strlen($password);
+        $lengthRemaining = $length - count($password);
         for ($i = 0; $i < $lengthRemaining; $i++){
-            $password .=  $this->pickRandomElement($finalAlphabet);
+            $password[] =  $this->pickRandomElement($finalAlphabet);
         }
-
-        $password = str_split($password);
 
         $password = $this->secureShuffle($password);
 

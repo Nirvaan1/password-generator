@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\PasswordGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,67 +24,12 @@ class PagesController extends AbstractController
         $uppercaseLetters = $request->query->getBoolean('uppercase_letters');
         $specialCharacters = $request->query->getBoolean('special_characters');
 
-        $lowercaseLettersAlphabet = range('a', 'z');
-        $uppercaseLettersAlphabet = range('A', 'Z');
-        $digitsAlphabet = range(0, 9);
-        $specialCharactersAlphabet = range('/','!');
-
-        $finalAlphabet = $lowercaseLettersAlphabet;
-
-        $password = [];
-
-        // add a lowercase letter
-        $password[] =  $this->pickRandomElement($lowercaseLettersAlphabet);
-
-        if ($uppercaseLetters){
-            $finalAlphabet = array_merge($finalAlphabet ,$uppercaseLettersAlphabet);
-
-            // add a capital letter
-            $password[] =  $this->pickRandomElement($uppercaseLettersAlphabet);
-        }
-        if ($digits){
-            $finalAlphabet = array_merge($finalAlphabet ,$digitsAlphabet);
-
-            // add a number
-            $password[] =  $this->pickRandomElement($digitsAlphabet);
-        }
-        if ($specialCharacters){
-            $finalAlphabet = array_merge($finalAlphabet ,$specialCharactersAlphabet);
-
-           // add a special character
-            $password[] =  $this->pickRandomElement($specialCharactersAlphabet);
-        }
-
-        $lengthRemaining = $length - count($password);
-        for ($i = 0; $i < $lengthRemaining; $i++){
-            $password[] =  $this->pickRandomElement($finalAlphabet);
-        }
-
-        $password = $this->secureShuffle($password);
-
-        $password = implode('',$password);
+        $passwordGenerator = new PasswordGenerator;
+        $password = $passwordGenerator->generate($length, $digits, $uppercaseLetters, $specialCharacters);
 
         return $this->render('pages/password.html.twig', [
             'password' => $password,
         ]);
     }
 
-    private function secureShuffle(array $arr) :array
-    {
-        // Source : https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
-        $length = count($arr);
-        for ($i = $length - 1; $i > 0; $i--) {
-            $j = random_int(0, $i);
-            $temp = $arr[$i];
-            $arr[$i] = $arr[$j];
-            $arr[$j] = $temp;
-        }
-
-        return $arr;
-    }
-
-    private function pickRandomElement(array $alphabet): string
-    {
-        return $alphabet[random_int(0, count( $alphabet) -1) ];
-    }
 }

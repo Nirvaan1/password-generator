@@ -16,7 +16,7 @@ class PagesController extends AbstractController
     }
 
     #[Route('/generate-password', name: 'app_generate_password')]
-    public function generatePassword(Request $request)
+    public function generatePassword(Request $request): Response
     {
         $length = $request->query->getInt('length');
         $digits = $request->query->getBoolean('digits');
@@ -32,25 +32,25 @@ class PagesController extends AbstractController
 
         $password = '';
 
-        // on rajoute une lettre en miniscule
+        // add a lowercase letter
         $password .=  $lowercaseLettersSet[random_int(0, count( $lowercaseLettersSet) -1) ];
 
         if ($uppercaseLetters){
             $characters = array_merge($characters ,$uppercaseLettersSet);
 
-            // on rajoute une majuscule
+            // add a capital letter
             $password .=  $uppercaseLettersSet[random_int(0, count( $uppercaseLettersSet) -1) ];
         }
         if ($digits){
             $characters = array_merge($characters ,$digitsSet);
 
-            // on rajoute un chiffre
+            // add a number
             $password .=  $digitsSet[random_int(0, count( $digitsSet) -1) ];
         }
         if ($specialCharacters){
             $characters = array_merge($characters ,$specialCharactersSet);
 
-           // on rajoute un caractere special
+           // add a special character
             $password .=  $specialCharactersSet[random_int(0, count( $specialCharactersSet) -1) ];
         }
 
@@ -61,7 +61,7 @@ class PagesController extends AbstractController
 
         $password = str_split($password);
 
-        $this->secureShuffle($password);
+        $password = $this->secureShuffle($password);
 
         $password = implode('',$password);
 
@@ -71,10 +71,9 @@ class PagesController extends AbstractController
     }
 
 
-    private function secureShuffle(array &$arr) :void
+    private function secureShuffle(array $arr) :array
     {
         // Source : https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
-        $arr = array_values($arr);
         $length = count($arr);
         for ($i = $length - 1; $i > 0; $i--) {
             $j = random_int(0, $i);
@@ -83,5 +82,6 @@ class PagesController extends AbstractController
             $arr[$j] = $temp;
         }
 
+        return $arr;
     }
 }

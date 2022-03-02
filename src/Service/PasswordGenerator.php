@@ -18,24 +18,20 @@ class PasswordGenerator
         // add a lowercase letter
         $password[] =  $this->pickRandomElement($lowercaseLettersAlphabet);
 
-        if ($uppercaseLetters){
-            $finalAlphabet = array_merge($finalAlphabet ,$uppercaseLettersAlphabet);
+        $mapping = [
+            'uppercaseLetters' => $uppercaseLettersAlphabet,
+            'digits' => $digitsAlphabet,
+            'specialCharacters' => $specialCharactersAlphabet,
+        ];
 
-            // add a capital letter
-            $password[] =  $this->pickRandomElement($uppercaseLettersAlphabet);
-        }
-        if ($digits){
-            $finalAlphabet = array_merge($finalAlphabet ,$digitsAlphabet);
+        foreach ($mapping as $constraint => $constraintAlphabet){
+            if ($$constraint){
+                $finalAlphabet = array_merge($finalAlphabet ,$constraintAlphabet);
 
-            // add a number
-            $password[] =  $this->pickRandomElement($digitsAlphabet);
+                $password[] =  $this->pickRandomElement($constraintAlphabet);
+            }
         }
-        if ($specialCharacters){
-            $finalAlphabet = array_merge($finalAlphabet ,$specialCharactersAlphabet);
 
-            // add a special character
-            $password[] =  $this->pickRandomElement($specialCharactersAlphabet);
-        }
 
         $lengthRemaining = $length - count($password);
         for ($i = 0; $i < $lengthRemaining; $i++){

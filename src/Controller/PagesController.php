@@ -12,11 +12,6 @@ class PagesController extends AbstractController
     #[Route('/', name: 'app_pages')]
     public function index(): Response
     {
-        $characters = range('a', 'z');
-        $characters = array_merge($characters, range('A', 'Z'));
-        $characters = array_merge($characters, range(0, 9));
-        $characters = array_merge($characters, array('/','\\',':',';','!','@','#','$','%','^','*','(',')','_','+','=','|','{','}','[',']','"',"'",'<','>',',','?','~','`','&',' ','.'));
-
         return $this->render('pages/home.html.twig');
     }
 
@@ -36,19 +31,17 @@ class PagesController extends AbstractController
             $characters = array_merge($characters, range(0, 9));
         }
         if ($specialCharacters){
-            $characters = array_merge($characters, array('/','!','@','#','$','%','^','*','(',')','_','+','=','|','{','}','[',']','<','>',',','?','~','`','&',' ','.'));
+            $characters = array_merge($characters, range('/','!'));
         }
 
         $password = '';
         $tab = count($characters) ;
 
         for ($i = 0; $i < $length; $i++){
-            $password .=  $characters[mt_rand($i, $tab -1 ) ];
+            $password .=  $characters[random_int(0, count( $characters) -1) ];
         }
 
-
         dump($password);
-
 
         return $this->render('pages/password.html.twig', [
             'password' => $password,

@@ -18,20 +18,19 @@ class PasswordGenerator
         // add a lowercase letter
         $password[] =  $this->pickRandomElement($lowercaseLettersAlphabet);
 
-        $mapping = [
-            'uppercaseLetters' => $uppercaseLettersAlphabet,
-            'digits' => $digitsAlphabet,
-            'specialCharacters' => $specialCharactersAlphabet,
+        $mappingConstraints = [
+            [$uppercaseLetters, $uppercaseLettersAlphabet],
+            [$digits,  $digitsAlphabet],
+            [$specialCharacters, $specialCharactersAlphabet],
         ];
 
-        foreach ($mapping as $constraint => $constraintAlphabet){
-            if ($$constraint){
+        foreach ($mappingConstraints as [$constraintEnabled, $constraintAlphabet]){
+            if ($constraintEnabled){
                 $finalAlphabet = array_merge($finalAlphabet ,$constraintAlphabet);
 
                 $password[] =  $this->pickRandomElement($constraintAlphabet);
             }
         }
-
 
         $lengthRemaining = $length - count($password);
         for ($i = 0; $i < $lengthRemaining; $i++){
@@ -40,9 +39,8 @@ class PasswordGenerator
 
         $password = $this->secureShuffle($password);
 
-        $password = implode('',$password);
+        return  implode('',$password);
 
-        return $password;
     }
 
     private function secureShuffle(array $arr) :array

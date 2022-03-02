@@ -23,40 +23,40 @@ class PagesController extends AbstractController
         $uppercaseLetters = $request->query->getBoolean('uppercase_letters');
         $specialCharacters = $request->query->getBoolean('special_characters');
 
-        $lowercaseLettersSet= range('a', 'z');
-        $uppercaseLettersSet = range('A', 'Z');
-        $digitsSet = range(0, 9);
-        $specialCharactersSet = range('/','!');
+        $lowercaseLettersAlphabet = range('a', 'z');
+        $uppercaseLettersAlphabet = range('A', 'Z');
+        $digitsAlphabet = range(0, 9);
+        $specialCharactersAlphabet = range('/','!');
 
-        $characters = $lowercaseLettersSet;
+        $finalAlphabet = $lowercaseLettersAlphabet;
 
         $password = '';
 
         // add a lowercase letter
-        $password .=  $lowercaseLettersSet[random_int(0, count( $lowercaseLettersSet) -1) ];
+        $password .=  $this->pickRandomElement($lowercaseLettersAlphabet);
 
         if ($uppercaseLetters){
-            $characters = array_merge($characters ,$uppercaseLettersSet);
+            $finalAlphabet = array_merge($finalAlphabet ,$uppercaseLettersAlphabet);
 
             // add a capital letter
-            $password .=  $uppercaseLettersSet[random_int(0, count( $uppercaseLettersSet) -1) ];
+            $password .=  $this->pickRandomElement($uppercaseLettersAlphabet);
         }
         if ($digits){
-            $characters = array_merge($characters ,$digitsSet);
+            $finalAlphabet = array_merge($finalAlphabet ,$digitsAlphabet);
 
             // add a number
-            $password .=  $digitsSet[random_int(0, count( $digitsSet) -1) ];
+            $password .=  $this->pickRandomElement($digitsAlphabet);
         }
         if ($specialCharacters){
-            $characters = array_merge($characters ,$specialCharactersSet);
+            $finalAlphabet = array_merge($finalAlphabet ,$specialCharactersAlphabet);
 
            // add a special character
-            $password .=  $specialCharactersSet[random_int(0, count( $specialCharactersSet) -1) ];
+            $password .=  $this->pickRandomElement($specialCharactersAlphabet);
         }
 
         $lengthRemaining = $length - mb_strlen($password);
         for ($i = 0; $i < $lengthRemaining; $i++){
-            $password .=  $characters[random_int(0, count( $characters) -1) ];
+            $password .=  $this->pickRandomElement($finalAlphabet);
         }
 
         $password = str_split($password);
@@ -70,7 +70,6 @@ class PagesController extends AbstractController
         ]);
     }
 
-
     private function secureShuffle(array $arr) :array
     {
         // Source : https://github.com/lamansky/secure-shuffle/blob/master/src/functions.php
@@ -83,5 +82,10 @@ class PagesController extends AbstractController
         }
 
         return $arr;
+    }
+
+    private function pickRandomElement(array $alphabet): string
+    {
+        return $alphabet[random_int(0, count( $alphabet) -1) ];
     }
 }

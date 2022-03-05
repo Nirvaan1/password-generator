@@ -5,8 +5,8 @@
         <div>
             <label for="length">Length</label>
             <select name="length" id="length">
-                {% for i in range(8,60) %}
-                    <option value="{{ i }}" {%  if i == 12 %}selected{% endif%} >{{ i }}</option>
+                {% for i in password_min_length..password_max_length %}
+                    <option value="{{ i }}" {%  if i == password_default_length %}selected{% endif%} >{{ i }}</option>
                 {% endfor %}
             </select>
         </div>

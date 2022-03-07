@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <h1>Password Generator</h1>
-    <form action="{{ path('app_generate_password') }}">
+    <form id="js-form-password" action="{{ path('app_generate_password') }}">
         <div>
             <label for="length">Length</label>
             <select name="length" id="length">
@@ -12,18 +12,33 @@
         </div>
 
         <div>
-            <label for="uppercase_letters">Uppercase Letters</label>
-            <input name="uppercase_letters" type="checkbox" id="uppercase_letters">
+            <label for="uppercase-letters">Uppercase Letters</label>
+            <input
+                    name="uppercase-letters"
+                    type="checkbox"
+                    id="uppercase-letters"
+                    {{ app.session.get('app.uppercase_letters') ? 'checked' }}
+            >
         </div>
 
         <div>
             <label for="digits">Numbers</label>
-            <input name="digits" type="checkbox" id="digits">
+            <input
+                    name="digits"
+                    type="checkbox"
+                    id="digits"
+                    {{ app.session.get('app.digits') ? 'checked' }}
+            >
         </div>
 
         <div>
-            <label for="special_characters">Special Characters</label>
-            <input name="special_characters" type="checkbox" id="special_characters">
+            <label for="special-characters">Special Characters</label>
+            <input
+                    name="special-characters"
+                    type="checkbox"
+                    id="special-characters"
+                    {{ app.session.get('app.special_characters') ? 'checked' }}
+            >
         </div>
 
         <div>
@@ -37,4 +52,43 @@
             <a href="https://github.com/Nirvaan1">Nirvaan</a>.
         </p>
     </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let form = document.getElementById('js-form-password');
+
+            const lengthSelect = document.getElementById('length');
+            const uppercaseLettersCheckox = document.getElementById('uppercase-letters');
+            const digitsCheckbox = document.getElementById('digits');
+            const specialCharactersCheckbox = document.getElementById('special-characters');
+
+            const passwordPreferences = JSON.parse(localStorage.getItem('password_preferences'));
+
+            if (passwordPreferences !== null){
+                console.log(passwordPreferences);
+                lengthSelect.value = passwordPreferences.length;
+                uppercaseLettersCheckox.checked =  passwordPreferences.uppercaseLetters;
+                digitsCheckbox.checked =  passwordPreferences.digits;
+                specialCharactersCheckbox.checked = passwordPreferences.specialCharacters;
+                console.log(lengthSelect.value);
+            } else {
+                console.log('Pas de préference');
+            }
+
+
+            form.addEventListener('submit', function (e){
+                //e.preventDefault();
+                //console.log(parseInt(lengthSelect.value, 10));
+                localStorage.setItem('password_preferences', JSON.stringify({
+                    length: parseInt(lengthSelect.value, 10),
+                    uppercaseLetters: uppercaseLettersCheckox.checked,
+                    digits: digitsCheckbox.checked,
+                    specialCharacters: specialCharactersCheckbox.checked
+
+                }))
+            })
+        });
+    </script>
 {% endblock %}

@@ -1,12 +1,21 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <h1>Password Generator</h1>
-    <form id="js-form-password" action="{{ path('app_generate_password') }}">
+    <form id="js-form-password" action="{{ path('app_generate_password') }}"
+          x-data="{
+            length: $persist(26),
+            uppercaseLetters:  $persist(false),
+            digits: $persist(false),
+            specialCharacters: $persist(true),
+          }"
+    >
         <div>
             <label for="length">Length</label>
-            <select name="length" id="length">
+            <select name="length" id="length"  x-model="length">
                 {% for i in password_min_length..password_max_length %}
-                    <option value="{{ i }}" {%  if i == password_default_length %}selected{% endif%} >{{ i }}</option>
+                    <option value="{{ i }}"
+                            {# {%  if i == password_default_length %}selected{% endif%} #}
+                    >{{ i }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -17,7 +26,8 @@
                     name="uppercase-letters"
                     type="checkbox"
                     id="uppercase-letters"
-                    {{ app.session.get('app.uppercase_letters') ? 'checked' }}
+                    x-model="uppercaseLetters"
+                  {#   {{ app.session.get('app.uppercase_letters') ? 'checked' }}#}
             >
         </div>
 
@@ -27,7 +37,8 @@
                     name="digits"
                     type="checkbox"
                     id="digits"
-                    {{ app.session.get('app.digits') ? 'checked' }}
+                    x-model="digits"
+                   {#  {{ app.session.get('app.digits') ? 'checked' }}#}
             >
         </div>
 
@@ -37,7 +48,8 @@
                     name="special-characters"
                     type="checkbox"
                     id="special-characters"
-                    {{ app.session.get('app.special_characters') ? 'checked' }}
+                    x-model="specialCharacters"
+                    {# {{ app.session.get('app.special_characters') ? 'checked' }} #}
             >
         </div>
 
@@ -55,40 +67,7 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let form = document.getElementById('js-form-password');
+    <script defer src="https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
 
-            const lengthSelect = document.getElementById('length');
-            const uppercaseLettersCheckox = document.getElementById('uppercase-letters');
-            const digitsCheckbox = document.getElementById('digits');
-            const specialCharactersCheckbox = document.getElementById('special-characters');
-
-            const passwordPreferences = JSON.parse(localStorage.getItem('password_preferences'));
-
-            if (passwordPreferences !== null){
-                console.log(passwordPreferences);
-                lengthSelect.value = passwordPreferences.length;
-                uppercaseLettersCheckox.checked =  passwordPreferences.uppercaseLetters;
-                digitsCheckbox.checked =  passwordPreferences.digits;
-                specialCharactersCheckbox.checked = passwordPreferences.specialCharacters;
-                console.log(lengthSelect.value);
-            } else {
-                console.log('Pas de préference');
-            }
-
-
-            form.addEventListener('submit', function (e){
-                //e.preventDefault();
-                //console.log(parseInt(lengthSelect.value, 10));
-                localStorage.setItem('password_preferences', JSON.stringify({
-                    length: parseInt(lengthSelect.value, 10),
-                    uppercaseLetters: uppercaseLettersCheckox.checked,
-                    digits: digitsCheckbox.checked,
-                    specialCharacters: specialCharactersCheckbox.checked
-
-                }))
-            })
-        });
-    </script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 {% endblock %}

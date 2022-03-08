@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <h1> Password Generator</h1>
-    <form id="js-form-password" action="{{ path('app_generate_password') }} >
+    <form id="js-form-password" action="{{ path('app_generate_password') }}" >
         <div>
             <label for="length">Length</label>
-            <select name="length" id="length"  x-model="length">
+            <select name="length" id="length" >
                 {% for i in password_min_length..password_max_length %}
                     <option value="{{ i }}"
                   {%  if i == password_default_length %}selected{% endif%}
@@ -16,10 +16,10 @@
         <div>
             <label for="uppercase-letters">Uppercase Letters</label>
             <input
-                    name="uppercase-letters"
+                    name="uppercase_letters"
                     type="checkbox"
                     id="uppercase-letters"
-               {{ app.session.get('app.uppercase_letters') ? 'checked' }}
+                    {{ uppercaseLetters? 'checked' }}
             >
         </div>
 
@@ -29,17 +29,17 @@
                     name="digits"
                     type="checkbox"
                     id="digits"
-                    {{ app.session.get('app.digits') ? 'checked' }}
+                    {{ digits ? 'checked' }}
             >
         </div>
 
         <div>
             <label for="special-characters">Special Characters</label>
             <input
-                    name="special-characters"
+                    name="special_characters"
                     type="checkbox"
                     id="special-characters"
-                    {{ app.session.get('app.special_characters') ? 'checked' }}
+                    {{ specialCharacters ? 'checked' }}
             >
         </div>
 

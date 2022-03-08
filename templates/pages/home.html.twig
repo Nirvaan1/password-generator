@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-<h1>Password Generator</h1>
-    <form id="js-form-password" action="{{ path('app_generate_password') }}"
+<h1> Password Generator</h1>
+    <form id="js-form-password" action="{{ path('app_generate_password') }} x-cloak"
           x-data="{
             length: $persist(26),
             uppercaseLetters:  $persist(false),
